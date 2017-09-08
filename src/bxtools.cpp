@@ -12,6 +12,7 @@
 #include <bxconvert.h>
 #include <bxmol.h>
 #include <bxgroup.h>
+#include <bxextract.h>
 
 static const char *USAGE_MESSAGE =
 "Program: bxtools \n"
@@ -25,6 +26,7 @@ static const char *USAGE_MESSAGE =
 "           relabel        Move BX barcodes from BX tags (e.g. BX:TAATACG) to qname_TAATACG\n"
 "           mol            Output BED with footprint of each molecule (from MI tag)\n"
 "           convert        Flip the BX tag and chromosome, so as to allow for a BX-sorted and indexable BAM\n"
+"           extract        Extract reads from BAM-file with given barcodes\n"
 "\nReport bugs to jwala@broadinstitute.org \n\n";
 
 int main(int argc, char** argv) {
@@ -51,12 +53,14 @@ int main(int argc, char** argv) {
       runGroup(argc -1, argv + 1);
     } else if (command == "mol") {
       runMol(argc -1, argv + 1);
+    } else if (command == "extract") {
+      runExtract(argc -1, argv + 1);
     }
     else {
       std::cerr << USAGE_MESSAGE;
       return 0;
     }
-  } 
+  }
 
   return 0;
 

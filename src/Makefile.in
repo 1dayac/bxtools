@@ -103,7 +103,7 @@ am_bxtools_OBJECTS = bxtools-bxtools.$(OBJEXT) \
 	bxtools-bxsplit.$(OBJEXT) bxtools-bxstats.$(OBJEXT) \
 	bxtools-bxtile.$(OBJEXT) bxtools-bxrelabel.$(OBJEXT) \
 	bxtools-bxconvert.$(OBJEXT) bxtools-bxmol.$(OBJEXT) \
-	bxtools-bxgroup.$(OBJEXT)
+	bxtools-bxgroup.$(OBJEXT) bxtools-bxextract.$(OBJEXT)
 bxtools_OBJECTS = $(am_bxtools_OBJECTS)
 bxtools_DEPENDENCIES = $(top_builddir)/SeqLib/src/libseqlib.a \
 	$(top_builddir)/SeqLib/htslib/libhts.a
@@ -270,7 +270,7 @@ bxtools_LDADD = \
 	$(top_builddir)/SeqLib/src/libseqlib.a \
 	$(top_builddir)/SeqLib/htslib/libhts.a 
 
-bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxstats.cpp bxtile.cpp bxrelabel.cpp bxconvert.cpp bxmol.cpp bxgroup.cpp
+bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxstats.cpp bxextract.cpp bxtile.cpp bxrelabel.cpp bxconvert.cpp bxmol.cpp bxgroup.cpp
 all: all-am
 
 .SUFFIXES:
@@ -363,6 +363,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxrelabel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxsplit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxstats.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxextract.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxtile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxtools.Po@am__quote@
 
@@ -421,6 +422,20 @@ bxtools-bxstats.obj: bxstats.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bxstats.cpp' object='bxtools-bxstats.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxstats.obj `if test -f 'bxstats.cpp'; then $(CYGPATH_W) 'bxstats.cpp'; else $(CYGPATH_W) '$(srcdir)/bxstats.cpp'; fi`
+
+bxtools-bxextract.o: bxextract.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxextract.o -MD -MP -MF $(DEPDIR)/bxtools-bxextract.Tpo -c -o bxtools-bxextract.o `test -f 'bxextract.cpp' || echo '$(srcdir)/'`bxextract.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bxtools-bxextract.Tpo $(DEPDIR)/bxtools-bxextract.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bxextract.cpp' object='bxtools-bxextract.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxextract.o `test -f 'bxextract.cpp' || echo '$(srcdir)/'`bxextract.cpp
+
+bxtools-bxextract.obj: bxextract.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxextract.obj -MD -MP -MF $(DEPDIR)/bxtools-bxextract.Tpo -c -o bxtools-bxextract.obj `if test -f 'bxextract.cpp'; then $(CYGPATH_W) 'bxextract.cpp'; else $(CYGPATH_W) '$(srcdir)/bxextract.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bxtools-bxextract.Tpo $(DEPDIR)/bxtools-bxextract.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bxextract.cpp' object='bxtools-bxextract.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxextract.obj `if test -f 'bxextract.cpp'; then $(CYGPATH_W) 'bxextract.cpp'; else $(CYGPATH_W) '$(srcdir)/bxextract.cpp'; fi`
 
 bxtools-bxtile.o: bxtile.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxtile.o -MD -MP -MF $(DEPDIR)/bxtools-bxtile.Tpo -c -o bxtools-bxtile.o `test -f 'bxtile.cpp' || echo '$(srcdir)/'`bxtile.cpp
