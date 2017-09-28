@@ -40,6 +40,7 @@ static const struct option longopts[] = {
 
 static void read_bx(std::string& bx, const SeqLib::BamRecord& r);
 static const std::string empty_tag = "Empty";
+static void parseOptions(int argc, char** argv);
 
 void runConvert(int argc, char** argv) {
 
