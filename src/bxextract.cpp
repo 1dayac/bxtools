@@ -51,17 +51,17 @@ void runExtract(int argc, char** argv) {
     fillBarcodeMap(barcodes_to_filter);
 
     SeqLib::BamWriter writer;
-
-
+    writer.Open("-");
+    writer.WriteHeader();
     // loop and filter
     SeqLib::BamRecord r;
     size_t count = 0;
     while (reader.GetNextRecord(r)) {
         std::string bx;
         bool tag_present = r.GetZTag("BX", bx);
-        if (!tag_present || barcodes_to_filter.count(bx))
+        if (!tag_present || barcodes_to_filter.count(bx) == 0)
             continue;
-
+        writer.WriteRecord(r);
     }
 }
 
