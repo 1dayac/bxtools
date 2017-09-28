@@ -52,6 +52,7 @@ void runExtract(int argc, char** argv) {
 
     SeqLib::BamWriter writer;
     writer.Open("-");
+    writer.SetHeader(reader.Header());
     writer.WriteHeader();
     // loop and filter
     SeqLib::BamRecord r;
