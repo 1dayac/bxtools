@@ -82,7 +82,7 @@ static void parseOptions(int argc, char** argv) {
     for (char c; (c = getopt_long(argc, argv, shortopts, longopts, NULL)) != -1;) {
         std::istringstream arg(optarg != NULL ? optarg : "");
         switch (c) {
-            case 'a': arg >> opt::mapping_quality; break;
+            case 'q': arg >> opt::mapping_quality; break;
             case 'v': opt::verbose = true; break;
         }
     }
