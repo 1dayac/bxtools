@@ -13,6 +13,7 @@
 #include <bxmol.h>
 #include <bxgroup.h>
 #include <bxextract.h>
+#include <bxfilter.h>
 
 static const char *USAGE_MESSAGE =
 "Program: bxtools \n"
@@ -27,7 +28,9 @@ static const char *USAGE_MESSAGE =
 "           mol            Output BED with footprint of each molecule (from MI tag)\n"
 "           convert        Flip the BX tag and chromosome, so as to allow for a BX-sorted and indexable BAM\n"
 "           extract        Extract reads from BAM-file with given barcodes\n"
-"\nReport bugs to jwala@broadinstitute.org \n\n";
+"           filter         Filter reads from BAM-file by quality\n"
+
+        "\nReport bugs to jwala@broadinstitute.org \n\n";
 
 int main(int argc, char** argv) {
 
@@ -55,6 +58,8 @@ int main(int argc, char** argv) {
       runMol(argc -1, argv + 1);
     } else if (command == "extract") {
       runExtract(argc -1, argv + 1);
+    } else if (command == "filter") {
+      runFilter(argc - 1, argv + 1);
     }
     else {
       std::cerr << USAGE_MESSAGE;
