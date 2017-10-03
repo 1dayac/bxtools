@@ -12,7 +12,7 @@ namespace opt {
     static int mapping_quality = 0;
 }
 
-static const char* shortopts = "a:hv";
+static const char* shortopts = "q:hv";
 static const struct option longopts[] = {
         { "help",                    no_argument, NULL, 'h' },
         { NULL, 0, NULL, 0 },
@@ -42,7 +42,6 @@ void runFilter(int argc, char** argv) {
         std::cerr << "Failed to open bam: " << opt::bam << std::endl;
         exit(EXIT_FAILURE);
     }
-
     SeqLib::BamWriter writer;
     writer.Open("-");
     writer.SetHeader(reader.Header());
