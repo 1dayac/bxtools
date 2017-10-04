@@ -10,13 +10,15 @@ namespace opt {
     static std::string bam; // the bam to analyze
     static bool verbose = false;
     static int mapping_quality = 0;
+    static double max_soft_clipping = 1.0;
 }
 
-static const char* shortopts = "q:hv";
+static const char* shortopts = "q:s:hv";
 static const struct option longopts[] = {
         { "help",                    no_argument, NULL, 'h' },
         { NULL, 0, NULL, 0 },
-        {"mapping_quality", required_argument, NULL, 'a'}
+        {"mapping_quality", optional_argument, NULL, 'a'},
+        {"max_soft_clipping", optional_argument, NULL, 's'}
 };
 
 
@@ -25,8 +27,9 @@ static const char *STAT_USAGE_MESSAGE =
                 "Description: Extract all reads from in.bam that satisfy parameters \n"
                 "\n"
                 "  General options\n"
-                "-q, --mapping quality                    Filter read pairs with mapping quality of any read lower than [a]\n"
-                "  -v, --verbose                        Set verbose output\n"
+                "-q, --mapping_quality                    Filter read pairs with mapping quality of any read lower than [a]\n"
+                "-s, --max_soft_clipping                  Filter read pairs with any read with portion of soft clipped pairs more than [s]\n"
+                "  -v, --verbose                          Set verbose output\n"
                 "\n";
 
 static void parseOptions(int argc, char** argv);
@@ -64,6 +67,10 @@ static bool CheckConditions(SeqLib::BamRecord &r1, SeqLib::BamRecord &r2) {
     if (r1.MapQuality() < opt::mapping_quality || r2.MapQuality() < opt::mapping_quality) {
         return false;
     }
+    if (r1.NumSoftClip()/(double)r1.Length() > opt::max_soft_clipping || r2.NumSoftClip()/(double)r2.Length() > opt::max_soft_clipping) {
+        return false;
+    }
+
     return true;
 }
 
@@ -83,6 +90,7 @@ static void parseOptions(int argc, char** argv) {
         switch (c) {
             case 'q': arg >> opt::mapping_quality; break;
             case 'v': opt::verbose = true; break;
+            case 's': arg >> opt::max_soft_clipping; break;
         }
     }
 
