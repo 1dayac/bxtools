@@ -11,14 +11,16 @@ namespace opt {
     static bool verbose = false;
     static int mapping_quality = 0;
     static double max_soft_clipping = 1.0;
+    static double max_hard_clipping = 1.0;
 }
 
-static const char* shortopts = "q:s:hv";
+static const char* shortopts = "c:q:s:hv";
 static const struct option longopts[] = {
         { "help",                    no_argument, NULL, 'h' },
         { NULL, 0, NULL, 0 },
-        {"mapping_quality", optional_argument, NULL, 'a'},
-        {"max_soft_clipping", optional_argument, NULL, 's'}
+        {"mapping_quality", optional_argument, NULL, 'q'},
+        {"max_soft_clipping", optional_argument, NULL, 's'},
+        {"max_hard_clipping", optional_argument, NULL, 'c'}
 };
 
 
@@ -29,6 +31,7 @@ static const char *STAT_USAGE_MESSAGE =
                 "  General options\n"
                 "-q, --mapping_quality                    Filter read pairs with mapping quality of any read lower than [a]\n"
                 "-s, --max_soft_clipping                  Filter read pairs with any read with portion of soft clipped pairs more than [s]\n"
+                "-c, --max_hard_clipping                  Filter read pairs with any read with portion of hard clipped pairs more than [s]\n"
                 "  -v, --verbose                          Set verbose output\n"
                 "\n";
 
@@ -53,6 +56,7 @@ void runFilter(int argc, char** argv) {
     SeqLib::BamRecord r1;
     SeqLib::BamRecord r2;
     size_t count = 0;
+    std::cerr << "max-soft-clipping" << opt::max_soft_clipping;
     while (reader.GetNextRecord(r1)) {
         if (reader.GetNextRecord(r2)) {
             if (CheckConditions(r1, r2)) {
@@ -68,6 +72,10 @@ static bool CheckConditions(SeqLib::BamRecord &r1, SeqLib::BamRecord &r2) {
         return false;
     }
     if (r1.NumSoftClip()/(double)r1.Length() > opt::max_soft_clipping || r2.NumSoftClip()/(double)r2.Length() > opt::max_soft_clipping) {
+        return false;
+    }
+
+    if (r1.NumHardClip()/(double)r1.Length() > opt::max_hard_clipping || r2.NumHardClip()/(double)r2.Length() > opt::max_hard_clipping) {
         return false;
     }
 
@@ -91,6 +99,7 @@ static void parseOptions(int argc, char** argv) {
             case 'q': arg >> opt::mapping_quality; break;
             case 'v': opt::verbose = true; break;
             case 's': arg >> opt::max_soft_clipping; break;
+            case 'c': arg >> opt::max_hard_clipping; break;
         }
     }
 
