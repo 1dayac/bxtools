@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <bxsplit.h>
+#include <bxsplit2.h>
 #include <bxstats.h>
 #include <bxtile.h>
 #include <bxrelabel.h>
@@ -29,6 +30,7 @@ static const char *USAGE_MESSAGE =
 "           convert        Flip the BX tag and chromosome, so as to allow for a BX-sorted and indexable BAM\n"
 "           extract        Extract reads from BAM-file with given barcodes\n"
 "           filter         Filter reads from BAM-file by quality\n"
+"           split-by-ref   Create list of barcodes for each reference sequence \n"
 
         "\nReport bugs to jwala@broadinstitute.org \n\n";
 
@@ -60,6 +62,8 @@ int main(int argc, char** argv) {
       runExtract(argc -1, argv + 1);
     } else if (command == "filter") {
       runFilter(argc - 1, argv + 1);
+    } else if (command == "split-by-ref") {
+      runSplitByReference(argc - 1, argv + 1);
     }
     else {
       std::cerr << USAGE_MESSAGE;

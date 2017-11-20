@@ -3,5 +3,4 @@
 
 void parseSplitOptions(int argc, char** argv);
 void runSplit(int argc, char** argv);
-
 #endif
