@@ -100,7 +100,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_bxtools_OBJECTS = bxtools-bxtools.$(OBJEXT) \
-	bxtools-bxsplit.$(OBJEXT) bxtools-bxstats.$(OBJEXT) \
+	bxtools-bxsplit.$(OBJEXT) bxtools-bxsplit2.$(OBJEXT) bxtools-bxstats.$(OBJEXT) \
 	bxtools-bxtile.$(OBJEXT) bxtools-bxrelabel.$(OBJEXT) \
 	bxtools-bxconvert.$(OBJEXT) bxtools-bxmol.$(OBJEXT) \
 	bxtools-bxgroup.$(OBJEXT) bxtools-bxextract.$(OBJEXT) bxtools-bxfilter.$(OBJEXT)\
