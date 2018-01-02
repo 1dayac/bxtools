@@ -4,12 +4,14 @@
 #include <fstream>
 #include "SeqLib/BamReader.h"
 #include "SeqLib/BamWriter.h"
+#include <experimental/filesystem>
+
 
 namespace opt {
 
     static std::string bam; // the bam to analyze
     static bool verbose = false;
-    static std::string barcode_file; // file with list of tags to be extracted
+    static std::string folder_with_barcode_files; // file with list of tags to be extracted
 }
 
 static const char* shortopts = "hv:";
@@ -29,11 +31,15 @@ static const char *STAT_USAGE_MESSAGE =
 
 static void parseOptions(int argc, char** argv);
 
-void fillBarcodeMap(std::unordered_set<std::string> &barcodes_to_filter) {
-    std::ifstream in(opt::barcode_file);
-    std::string barcode;
-    while (in >> barcode) {
-        barcodes_to_filter.insert(barcode);
+void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &barcodes_to_filter, std::unordered_map<std::string, SeqLib::BamWriter> &writers) {
+
+    for(auto& p: fs::directory_iterator(opt::folder_with_barcode_files)) {
+        writers[std::filesystem::basename(p)] = SeqLib::BamWriter();
+        std::ifstream in(p);
+        std::string barcode;
+        while (in >> barcode) {
+            barcodes_to_filter[barcode].push_back(std::filesystem::basename(p));
+        }
     }
 }
 
@@ -47,22 +53,32 @@ void runExtract(int argc, char** argv) {
         exit(EXIT_FAILURE);
     }
 
-    std::unordered_set<std::string> barcodes_to_filter;
-    fillBarcodeMap(barcodes_to_filter);
+    std::unordered_map<std::string, std::vector<std::string>> barcodes_to_filter;
+    std::unordered_map<std::string, SeqLib::BamWriter> writers;
+    fillBarcodeMap(barcodes_to_filter, writers);
 
-    SeqLib::BamWriter writer;
-    writer.Open("-");
-    writer.SetHeader(reader.Header());
-    writer.WriteHeader();
+
+
+
+
+    for (auto& writer : writers) {
+        writer.second.Open("-");
+        writer.second.SetHeader(reader.Header());
+        writer.second.WriteHeader();
+    }
+
     // loop and filter
     SeqLib::BamRecord r;
     size_t count = 0;
     while (reader.GetNextRecord(r)) {
         std::string bx;
         bool tag_present = r.GetZTag("BX", bx);
-        if (!tag_present || barcodes_to_filter.count(bx) == 0)
+        if (!tag_present)
             continue;
-        writer.WriteRecord(r);
+
+        for (auto ids : barcodes_to_filter[barcode]) {
+            writers[ids].WriteRecord(r);
+        }
     }
 }
 
