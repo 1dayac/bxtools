@@ -39,12 +39,18 @@ void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &b
     dirent *dp;
     while ((dp = readdir(dirp)) != NULL) {
         std::string filename(dp->d_name);
-        writers[filename.substr(0,filename.length() - 3)] = SeqLib::BamWriter();
+        std::cout << filename << std::endl;
+        if (filename == "." || filename == ".." )
+            continue;
+        writers[filename.substr(0,filename.length() - 4)] = SeqLib::BamWriter();
+        std::cout << filename.substr(0,filename.length() - 4) << std::endl;
+
         std::string path = opt::folder_with_barcode_files + "/" + filename;
         std::ifstream in(path);
         std::string barcode;
+        std::cout << "5" << std::endl;
         while (in >> barcode) {
-            barcodes_to_filter[barcode].push_back(filename.substr(0,filename.length() - 3));
+            barcodes_to_filter[barcode].push_back(filename.substr(0,filename.length() - 4));
         }
     }
 }
@@ -62,9 +68,6 @@ void runExtract(int argc, char** argv) {
     std::unordered_map<std::string, std::vector<std::string>> barcodes_to_filter;
     std::unordered_map<std::string, SeqLib::BamWriter> writers;
     fillBarcodeMap(barcodes_to_filter, writers);
-
-
-
 
 
     for (auto& writer : writers) {
