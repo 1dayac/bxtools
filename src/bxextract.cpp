@@ -4,7 +4,7 @@
 #include <fstream>
 #include "SeqLib/BamReader.h"
 #include "SeqLib/BamWriter.h"
-#include <experimental/filesystem>
+#include "dirent.h"
 
 
 namespace opt {
@@ -33,12 +33,17 @@ static void parseOptions(int argc, char** argv);
 
 void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &barcodes_to_filter, std::unordered_map<std::string, SeqLib::BamWriter> &writers) {
 
-    for(auto& p: fs::directory_iterator(opt::folder_with_barcode_files)) {
-        writers[std::filesystem::basename(p)] = SeqLib::BamWriter();
-        std::ifstream in(p);
+
+    DIR *dirp = opendir(opt::folder_with_barcode_files.c_str());
+    dirent *dp;
+    while ((dp = readdir(dirp)) != NULL) {
+        std::string filename(dp->d_name);
+        writers[filename.substr(0,filename.length() - 3)] = SeqLib::BamWriter();
+        std::string path = opt::folder_with_barcode_files + "/" + filename;
+        std::ifstream in(path);
         std::string barcode;
         while (in >> barcode) {
-            barcodes_to_filter[barcode].push_back(std::filesystem::basename(p));
+            barcodes_to_filter[barcode].push_back(filename.substr(0,filename.length() - 3));
         }
     }
 }
@@ -76,7 +81,7 @@ void runExtract(int argc, char** argv) {
         if (!tag_present)
             continue;
 
-        for (auto ids : barcodes_to_filter[barcode]) {
+        for (auto ids : barcodes_to_filter[bx]) {
             writers[ids].WriteRecord(r);
         }
     }
@@ -91,7 +96,7 @@ static void parseOptions(int argc, char** argv) {
         die = true;
     else {
         opt::bam = std::string(argv[1]);
-        opt::barcode_file = std::string(argv[2]);
+        opt::folder_with_barcode_files = std::string(argv[2]);
     }
 
     for (char c; (c = getopt_long(argc, argv, shortopts, longopts, NULL)) != -1;) {
