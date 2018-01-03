@@ -12,6 +12,7 @@ namespace opt {
     static std::string bam; // the bam to analyze
     static bool verbose = false;
     static std::string folder_with_barcode_files; // file with list of tags to be extracted
+    static std::string folder_with_small_bams;
 }
 
 static const char* shortopts = "hv:";
@@ -22,7 +23,7 @@ static const struct option longopts[] = {
 
 
 static const char *STAT_USAGE_MESSAGE =
-        "Usage: bxtools extract in.bam list.txt > out.bam\n"
+        "Usage: bxtools extract in.bam <folder_with_barcode_lists> <folder_with_bams>\n"
                 "Description: Extract all reads from in.bam with barcodes from list.txt \n"
                 "\n"
                 "  General options\n"
@@ -67,7 +68,7 @@ void runExtract(int argc, char** argv) {
 
 
     for (auto& writer : writers) {
-        writer.second.Open("-");
+        writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam");
         writer.second.SetHeader(reader.Header());
         writer.second.WriteHeader();
     }
@@ -92,11 +93,12 @@ static void parseOptions(int argc, char** argv) {
     bool die = false;
     bool help = false;
 
-    if (argc != 3)
+    if (argc != 4)
         die = true;
     else {
         opt::bam = std::string(argv[1]);
         opt::folder_with_barcode_files = std::string(argv[2]);
+        opt::folder_with_small_bams = std::string(argv[3]);
     }
 
     for (char c; (c = getopt_long(argc, argv, shortopts, longopts, NULL)) != -1;) {
