@@ -34,7 +34,7 @@ static const char *STAT_USAGE_MESSAGE =
                 "-q, --mapping_quality                    Filter read pairs with mapping quality of any read lower than [q]\n"
                 "-s, --max_soft_clipping                  Filter read pairs with any read with portion of soft clipped pairs more than [s]\n"
                 "-c, --max_hard_clipping                  Filter read pairs with any read with portion of hard clipped pairs more than [c]\n"
-                "-g, --filter_bad                         Filter read pairs that don't satisfy given conditions\n"
+                "-b, --filter_bad                         Filter read pairs that don't satisfy given conditions\n"
                 "  -v, --verbose                          Set verbose output\n"
                 "\n";
 
@@ -142,6 +142,7 @@ static void parseOptions(int argc, char** argv) {
             case 'v': opt::verbose = true; break;
             case 's': arg >> opt::max_soft_clipping; break;
             case 'c': arg >> opt::max_hard_clipping; break;
+            case 'b' : opt::filter_bad = true; break;
         }
     }
 
