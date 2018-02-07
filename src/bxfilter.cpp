@@ -129,7 +129,7 @@ static void parseOptions(int argc, char** argv) {
     bool die = false;
     bool help = false;
 
-    if (argc < 1)
+    if (argc < 2)
         die = true;
     else {
         opt::bam = std::string(argv[1]);
