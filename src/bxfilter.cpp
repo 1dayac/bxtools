@@ -12,15 +12,17 @@ namespace opt {
     static int mapping_quality = 0;
     static double max_soft_clipping = 1.0;
     static double max_hard_clipping = 1.0;
+    static bool filter_bad = false;
 }
 
-static const char* shortopts = "c:q:s:hv";
+static const char* shortopts = "c:q:s:hvb";
 static const struct option longopts[] = {
         { "help",                    no_argument, NULL, 'h' },
         { NULL, 0, NULL, 0 },
         {"mapping_quality", optional_argument, NULL, 'q'},
         {"max_soft_clipping", optional_argument, NULL, 's'},
-        {"max_hard_clipping", optional_argument, NULL, 'c'}
+        {"max_hard_clipping", optional_argument, NULL, 'c'},
+        {"filter_bad", optional_argument, NULL, 'b'}
 };
 
 
@@ -29,14 +31,15 @@ static const char *STAT_USAGE_MESSAGE =
                 "Description: Extract all reads from in.bam that satisfy parameters \n"
                 "\n"
                 "  General options\n"
-                "-q, --mapping_quality                    Filter read pairs with mapping quality of any read lower than [a]\n"
+                "-q, --mapping_quality                    Filter read pairs with mapping quality of any read lower than [q]\n"
                 "-s, --max_soft_clipping                  Filter read pairs with any read with portion of soft clipped pairs more than [s]\n"
-                "-c, --max_hard_clipping                  Filter read pairs with any read with portion of hard clipped pairs more than [s]\n"
+                "-c, --max_hard_clipping                  Filter read pairs with any read with portion of hard clipped pairs more than [c]\n"
+                "-g, --filter_bad                         Filter read pairs that don't satisfy given conditions\n"
                 "  -v, --verbose                          Set verbose output\n"
                 "\n";
 
 static void parseOptions(int argc, char** argv);
-static bool CheckConditions(SeqLib::BamRecord &r1, SeqLib::BamRecord &r2);
+static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records);
 
 
 void runFilter(int argc, char** argv) {
@@ -54,32 +57,71 @@ void runFilter(int argc, char** argv) {
     writer.WriteHeader();
     // loop and filter
     SeqLib::BamRecord r1;
-    SeqLib::BamRecord r2;
     size_t count = 0;
     std::cerr << "max-soft-clipping" << opt::max_soft_clipping;
+    std::string read_id = "";
+    std::vector<SeqLib::BamRecord> bam_records;
     while (reader.GetNextRecord(r1)) {
-        if (reader.GetNextRecord(r2)) {
-            if (CheckConditions(r1, r2)) {
-                writer.WriteRecord(r1);
-                writer.WriteRecord(r2);
+        read_id = r1.Qname();
+        if (read_id == r1.Qname()) {
+            bam_records.push_back(r1);
+        } else {
+            if (CheckConditions(bam_records)) {
+                for (const auto& record : bam_records) {
+                    writer.WriteRecord(record);
+                }
             }
+            bam_records.clear();
+            bam_records.push_back(r1);
+            read_id == r1.Qname();
+        }
+    }
+    if (CheckConditions(bam_records)) {
+        for (const auto& record : bam_records) {
+            writer.WriteRecord(record);
         }
     }
 }
 
-static bool CheckConditions(SeqLib::BamRecord &r1, SeqLib::BamRecord &r2) {
-    if (r1.MapQuality() < opt::mapping_quality || r2.MapQuality() < opt::mapping_quality) {
-        return false;
-    }
-    if (r1.NumSoftClip()/(double)r1.Length() > opt::max_soft_clipping || r2.NumSoftClip()/(double)r2.Length() > opt::max_soft_clipping) {
+static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
+    if (!opt::filter_bad) {
+        for (const auto &record : records) {
+            if (record.MapQuality() < opt::mapping_quality) {
+                return false;
+            }
+        }
+        for (const auto &record : records) {
+            if (record.NumSoftClip()/(double)record.Length() > opt::max_soft_clipping) {
+                return false;
+            }
+        }
+
+        for (const auto &record : records) {
+            if (record.NumHardClip()/(double)record.Length() > opt::max_hard_clipping) {
+                return false;
+            }
+        }
+        return true;
+    } else {
+        for (const auto &record : records) {
+            if (record.MapQuality() < opt::mapping_quality) {
+                return true;
+            }
+        }
+        for (const auto &record : records) {
+            if (record.NumSoftClip()/(double)record.Length() > opt::max_soft_clipping) {
+                return true;
+            }
+        }
+
+        for (const auto &record : records) {
+            if (record.NumHardClip()/(double)record.Length() > opt::max_hard_clipping) {
+                return true;
+            }
+        }
         return false;
     }
 
-    if (r1.NumHardClip()/(double)r1.Length() > opt::max_hard_clipping || r2.NumHardClip()/(double)r2.Length() > opt::max_hard_clipping) {
-        return false;
-    }
-
-    return true;
 }
 
 static void parseOptions(int argc, char** argv) {
