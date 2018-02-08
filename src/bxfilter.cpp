@@ -58,11 +58,12 @@ void runFilter(int argc, char** argv) {
     // loop and filter
     SeqLib::BamRecord r1;
     size_t count = 0;
-    std::cerr << "max-soft-clipping" << opt::max_soft_clipping;
+    std::cerr << "max-soft-clipping " << opt::max_soft_clipping << std::endl;
+    std::cerr << "filter bad " << opt::filter_bad << std::endl;
+
     std::string read_id = "";
     std::vector<SeqLib::BamRecord> bam_records;
     while (reader.GetNextRecord(r1)) {
-        read_id = r1.Qname();
         if (read_id == r1.Qname()) {
             bam_records.push_back(r1);
         } else {
