@@ -105,17 +105,20 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
     } else {
         for (const auto &record : records) {
             if (record.MapQuality() < opt::mapping_quality) {
+                std::cerr << "Filtered: bad mapping quality" << std::endl;
                 return true;
             }
         }
         for (const auto &record : records) {
             if (record.NumSoftClip()/(double)record.Length() > opt::max_soft_clipping) {
+                std::cerr << "Filtered: soft clips" << std::endl;
                 return true;
             }
         }
 
         for (const auto &record : records) {
             if (record.NumHardClip()/(double)record.Length() > opt::max_hard_clipping) {
+                std::cerr << "Filtered: hard clips" << std::endl;
                 return true;
             }
         }
