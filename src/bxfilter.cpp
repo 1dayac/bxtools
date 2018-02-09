@@ -122,7 +122,7 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
 //               std::cerr << "Filtered: hard clips" << std::endl;
 //                return true;
 //            }
-        }
+//        }
         return false;
     }
 
