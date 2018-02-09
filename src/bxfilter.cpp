@@ -64,6 +64,7 @@ void runFilter(int argc, char** argv) {
     std::string read_id = "";
     std::vector<SeqLib::BamRecord> bam_records;
     while (reader.GetNextRecord(r1)) {
+
         if (read_id == r1.Qname()) {
             bam_records.push_back(r1);
         } else {
@@ -74,7 +75,7 @@ void runFilter(int argc, char** argv) {
             }
             bam_records.clear();
             bam_records.push_back(r1);
-            read_id == r1.Qname();
+            read_id = r1.Qname();
         }
     }
     if (CheckConditions(bam_records)) {
