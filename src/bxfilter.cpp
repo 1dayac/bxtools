@@ -117,11 +117,11 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
             }
         }
 
-        for (const auto &record : records) {
-            if (record.NumHardClip()/(double)record.Length() > opt::max_hard_clipping) {
-                std::cerr << "Filtered: hard clips" << std::endl;
-                return true;
-            }
+//        for (const auto &record : records) {
+//            if (record.NumHardClip()/(double)record.Length() > opt::max_hard_clipping) {
+//               std::cerr << "Filtered: hard clips" << std::endl;
+//                return true;
+//            }
         }
         return false;
     }
