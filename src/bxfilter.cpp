@@ -113,6 +113,17 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
         }
         for (const auto &record : records) {
             if (record.NumSoftClip()/(double)record.Length() > opt::max_soft_clipping) {
+                std::vector<std::string> chrom;
+                for (const auto &record2 : records) {
+                    chrom.push_back(record2.ChrName());
+                }
+                bool allAreEqual =
+                        find_if(chrom.begin() + 1,
+                                chrom.end(),
+                                bind1st(std::not_equal_to<std::string>(), chrom.front())) == chrom.end();
+                if (!allAreEqual) {
+                    return false;
+                }
                 std::cerr << "Filtered: soft clips" << std::endl;
                 return true;
             }
