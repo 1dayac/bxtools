@@ -138,7 +138,7 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
                 }
 
                 for (const auto &record2 : records) {
-                    if (AdditionalChecks(record2)) {
+                    if (!AdditionalChecks(record2)) {
                         return false;
                     }
                 }
