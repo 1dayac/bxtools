@@ -40,7 +40,19 @@ static const char *STAT_USAGE_MESSAGE =
 
 static void parseOptions(int argc, char** argv);
 static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records);
+static bool AdditionalChecks(const SeqLib::BamRecord &record);
 
+
+
+static bool AdditionalChecks(const SeqLib::BamRecord &record) {
+    if (record.NumMatchBases() < 50) {
+        return false;
+    }
+    if (record.AlignmentPosition() > 25 && record.Length() - record.AlignmentEndPosition() > 25) {
+        return false;
+    }
+    return true;
+}
 
 void runFilter(int argc, char** argv) {
     parseOptions(argc, argv);
@@ -124,6 +136,13 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
                 if (!allAreEqual) {
                     return false;
                 }
+
+                for (const auto &record2 : records) {
+                    if (AdditionalChecks(record2)) {
+                        return false;
+                    }
+                }
+
                 std::cerr << "Filtered: soft clips" << std::endl;
                 return true;
             }
