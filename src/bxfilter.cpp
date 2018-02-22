@@ -51,6 +51,28 @@ static bool AdditionalChecks(const SeqLib::BamRecord &record) {
     if (record.AlignmentPosition() > 25 && record.Length() - record.AlignmentEndPosition() > 25) {
         return false;
     }
+    auto quals = record.Qualities();
+    int start_pos = record.AlignmentPosition();
+    int end_pos = record.AlignmentEndPosition();
+    size_t sum_front = 0;
+    for (int i = 0; i < start_pos; ++i) {
+        sum_front += (int)quals[i];
+    }
+
+    if (sum_front / start_pos < 33 + 20) {
+        return false;
+    }
+
+    size_t sum_back = 0;
+    for (int i = record.AlignmentEndPosition(); i < quals.length(); ++i) {
+        sum_back += (int)quals[i];
+    }
+
+    if (sum_back / quals.length() - end_pos < 33 + 20) {
+        return false;
+    }
+
+
     return true;
 }
 
@@ -76,7 +98,6 @@ void runFilter(int argc, char** argv) {
     std::string read_id = "";
     std::vector<SeqLib::BamRecord> bam_records;
     while (reader.GetNextRecord(r1)) {
-
         if (read_id == r1.Qname()) {
             bam_records.push_back(r1);
         } else {
