@@ -139,7 +139,7 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
         return true;
     } else {
         for (const auto &record : records) {
-            if (record.NumMatchBases() == 0) {
+            if (!record.MappedFlag()) {
                 std::cerr << "Filtered: bad mapping quality" << std::endl;
                 return true;
             }
