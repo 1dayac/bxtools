@@ -48,9 +48,14 @@ void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &b
         std::string path = opt::folder_with_barcode_files + "/" + filename;
         std::ifstream in(path);
         std::string barcode;
-        std::cout << "5" << std::endl;
+        std::vector<std::string> barcodes;
         while (in >> barcode) {
-            barcodes_to_filter[barcode].push_back(filename.substr(0,filename.length() - 4));
+            barcodes.push_back(barcode);
+        }
+        if (barcodes.size() > 5) {
+            for (auto barcode : barcodes) {
+                barcodes_to_filter[barcode].push_back(filename.substr(0,filename.length() - 4));
+            }
         }
     }
 }
