@@ -42,7 +42,7 @@ void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &b
         std::cout << filename << std::endl;
         if (filename == "." || filename == ".." )
             continue;
-        writers[filename.substr(0,filename.length() - 4)] = SeqLib::BamWriter();
+
         std::cout << filename.substr(0,filename.length() - 4) << std::endl;
 
         std::string path = opt::folder_with_barcode_files + "/" + filename;
@@ -53,6 +53,7 @@ void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &b
             barcodes.push_back(barcode);
         }
         if (barcodes.size() > 5) {
+            writers[filename.substr(0,filename.length() - 4)] = SeqLib::BamWriter();
             for (auto barcode : barcodes) {
                 barcodes_to_filter[barcode].push_back(filename.substr(0,filename.length() - 4));
             }
