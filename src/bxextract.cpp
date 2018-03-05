@@ -73,14 +73,11 @@ void runExtract(int argc, char** argv) {
 
     std::unordered_map<std::string, std::vector<std::string>> barcodes_to_filter;
     std::unordered_map<std::string, SeqLib::BamWriter> writers;
+    std::unordered_map<std::string, std::vector<SeqLib::BamRecord> > records;
     fillBarcodeMap(barcodes_to_filter, writers);
 
 
-    for (auto& writer : writers) {
-        writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam");
-        writer.second.SetHeader(reader.Header());
-        writer.second.WriteHeader();
-    }
+
 
     // loop and filter
     SeqLib::BamRecord r;
@@ -92,10 +89,22 @@ void runExtract(int argc, char** argv) {
             continue;
 
         for (auto ids : barcodes_to_filter[bx]) {
-            writers[ids].WriteRecord(r);
+            records[ids].push_back(r);
         }
     }
+
+    for (auto& writer : writers) {
+        writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam");
+        writer.second.SetHeader(reader.Header());
+        writer.second.WriteHeader();
+        for (auto& rec : records[writer.first]) {
+            writer.second.WriteRecord(rec);
+        }
+        writer.second.Close();
+    }
+
 }
+
 
 static void parseOptions(int argc, char** argv) {
 

@@ -67,7 +67,7 @@ void parseSplit2Options(int argc, char** argv) {
 void runSplitByReference(int argc, char** argv) {
     parseSplit2Options(argc, argv);
 
-    // opeen the BAM
+    // open the BAM
     SeqLib::BamReader reader;
     if (!reader.Open(opt::bam)) {
         std::cerr << "Failed to open bam: " << opt::bam << std::endl;
