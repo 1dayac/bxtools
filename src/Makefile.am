@@ -8,5 +8,5 @@ bxtools_LDADD = \
 	$(top_builddir)/SeqLib/src/libseqlib.a \
 	$(top_builddir)/SeqLib/htslib/libhts.a 
 
-bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxsplit2.cpp bxstats.cpp bxextract.cpp bxfilter.cpp bxtile.cpp bxrelabel.cpp bxconvert.cpp bxmol.cpp bxgroup.cpp
+bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxsubsample.cpp bxsplit2.cpp bxstats.cpp bxextract.cpp bxfilter.cpp bxtile.cpp bxrelabel.cpp bxconvert.cpp bxmol.cpp bxgroup.cpp
 

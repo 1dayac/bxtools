@@ -15,6 +15,7 @@
 #include <bxgroup.h>
 #include <bxextract.h>
 #include <bxfilter.h>
+#include <bxsubsample.h>
 
 static const char *USAGE_MESSAGE =
 "Program: bxtools \n"
@@ -31,6 +32,7 @@ static const char *USAGE_MESSAGE =
 "           extract        Extract reads from BAM-file with given barcodes\n"
 "           filter         Filter reads from BAM-file by quality\n"
 "           split-by-ref   Create list of barcodes for each reference sequence \n"
+"           subsample      Create list of barcodes for each reference sequence \n"
 
         "\nReport bugs to jwala@broadinstitute.org \n\n";
 
@@ -64,6 +66,8 @@ int main(int argc, char** argv) {
       runFilter(argc - 1, argv + 1);
     } else if (command == "split-by-ref") {
       runSplitByReference(argc - 1, argv + 1);
+    } else if (command == "subsample") {
+      runSubsample(argc - 1, argv + 1);
     }
     else {
       std::cerr << USAGE_MESSAGE;
