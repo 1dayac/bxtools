@@ -16,6 +16,7 @@
 #include <bxextract.h>
 #include <bxfilter.h>
 #include <bxsubsample.h>
+#include <bxbamtofastq.h>
 
 static const char *USAGE_MESSAGE =
 "Program: bxtools \n"
@@ -23,6 +24,7 @@ static const char *USAGE_MESSAGE =
 "Usage: snowman <command> [options]\n\n"
 "Commands:\n"
 "           split          Split a BAM into multiple BAMs, one per BX tag\n"
+"           bamtofastq     Extract reads from bam file with BX barcode\n"
 "           stats          Collect BX-level statistics across a BAM\n"
 "           tile           Collect BX-level coverage in tiles or regions along genome\n"
 "           group          Group together BX tags into molecules\n"
@@ -68,6 +70,8 @@ int main(int argc, char** argv) {
       runSplitByReference(argc - 1, argv + 1);
     } else if (command == "subsample") {
       runSubsample(argc - 1, argv + 1);
+    } else if (command == "bamtofastq") {
+      runBamToFastq(argc - 1, argv + 1);
     }
     else {
       std::cerr << USAGE_MESSAGE;
