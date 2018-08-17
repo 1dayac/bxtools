@@ -24,7 +24,7 @@ static const struct option longopts[] = {
 };
 
 static const char *STAT_USAGE_MESSAGE =
-        "Usage: bxtools bamtofastq in.bam <folder_with_barcode_lists>\n"
+        "Usage: bxtools bamtofastq in.bam <folder_to_output_reads (should exist)>\n"
                 "Description: Convert bam-file to fastq file and keep BX tag \n"
                 "\n"
                 "  General options\n"
@@ -101,7 +101,7 @@ void runBamToFastq(int argc, char** argv) {
     parseOptions(argc, argv);
 
     std::string basename = opt::bam.substr(opt::bam.rfind("/") == std::string::npos ? 0 : opt::bam.rfind("/") + 1,
-                                           opt::bam.length() - (opt::bam.rfind("/") == std::string::npos ? 0 : opt::bam.rfind("/")) - 4);
+                                           opt::bam.length() - (opt::bam.rfind("/") == std::string::npos ? 0 : opt::bam.rfind("/")) - 5);
     std::string left_fastq = opt::output_folder + "/" + basename + "_R1.fastq";
     std::ofstream out(left_fastq, std::ofstream::out);
     std::string right_fastq = opt::output_folder + "/" + basename + "_R2.fastq";
