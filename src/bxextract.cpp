@@ -47,8 +47,12 @@ void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &b
         std::ifstream in(path);
         std::string barcode;
         std::vector<std::string> barcodes;
+        int count = 0;
         while (in >> barcode) {
             barcodes.push_back(barcode);
+            count++;
+            if (count == 100)
+                break;
         }
         if (barcodes.size() > 5) {
             writers[filename.substr(0,filename.length() - 4)] = SeqLib::BamWriter();
