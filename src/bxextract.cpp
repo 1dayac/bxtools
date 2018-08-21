@@ -43,8 +43,6 @@ void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &b
         if (filename == "." || filename == ".." )
             continue;
 
-        std::cout << filename.substr(0,filename.length() - 4) << std::endl;
-
         std::string path = opt::folder_with_barcode_files + "/" + filename;
         std::ifstream in(path);
         std::string barcode;
@@ -83,6 +81,9 @@ void runExtract(int argc, char** argv) {
     SeqLib::BamRecord r;
     size_t count = 0;
     while (reader.GetNextRecord(r)) {
+        count++;
+        if (count % 1000 == 0)
+            std::cout << count << " alignments are processed" << std::endl;
         std::string bx;
         bool tag_present = r.GetZTag("BX", bx);
         if (!tag_present)
