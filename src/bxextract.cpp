@@ -2,6 +2,7 @@
 #include <getopt.h>
 #include <iostream>
 #include <fstream>
+#include <memory>
 #include "SeqLib/BamReader.h"
 #include "SeqLib/BamWriter.h"
 #include "dirent.h"
@@ -73,14 +74,16 @@ void runExtract(int argc, char** argv) {
         exit(EXIT_FAILURE);
     }
 
+
+
     std::unordered_map<std::string, std::vector<std::string>> barcodes_to_filter;
     std::unordered_map<std::string, SeqLib::BamWriter> writers;
-    std::unordered_map<std::string, std::vector<SeqLib::BamRecord> > records;
+    std::unordered_map<std::string, std::vector<std::shared_ptr<SeqLib::BamRecord> > > records;
     fillBarcodeMap(barcodes_to_filter, writers);
 
 
 
-
+    std::vector<SeqLib::BamRecord> all_records;
     // loop and filter
     SeqLib::BamRecord r;
     size_t count = 0;
@@ -92,9 +95,9 @@ void runExtract(int argc, char** argv) {
         bool tag_present = r.GetZTag("BX", bx);
         if (!tag_present)
             continue;
-
+        all_records.push_back(r);
         for (auto ids : barcodes_to_filter[bx]) {
-            records[ids].push_back(r);
+            records[ids].push_back(std::make_shared<SeqLib::BamRecord>(r));
         }
     }
 
@@ -103,7 +106,7 @@ void runExtract(int argc, char** argv) {
         writer.second.SetHeader(reader.Header());
         writer.second.WriteHeader();
         for (auto& rec : records[writer.first]) {
-            writer.second.WriteRecord(rec);
+            writer.second.WriteRecord(*rec);
         }
         writer.second.Close();
     }
