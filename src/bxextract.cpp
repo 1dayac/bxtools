@@ -83,7 +83,7 @@ void runExtract(int argc, char** argv) {
 
 
 
-    std::vector<SeqLib::BamRecord> all_records;
+    std::vector<std::shared_ptr<SeqLib::BamRecord>> all_records;
     // loop and filter
     SeqLib::BamRecord r;
     size_t count = 0;
@@ -95,9 +95,9 @@ void runExtract(int argc, char** argv) {
         bool tag_present = r.GetZTag("BX", bx);
         if (!tag_present)
             continue;
-        all_records.push_back(r);
+        all_records.push_back(std::make_shared<SeqLib::BamRecord>(r));
         for (auto ids : barcodes_to_filter[bx]) {
-            records[ids].push_back(std::make_shared<SeqLib::BamRecord>(r));
+            records[ids].push_back(all_records.back());
         }
     }
 
