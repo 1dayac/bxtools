@@ -101,7 +101,9 @@ void runExtract(int argc, char** argv) {
         bool tag_present = r.GetZTag("BX", bx);
         if (!tag_present)
             continue;
-        all_records.push_back(std::make_shared<SeqLib::BamRecord>(r));
+        if (barcodes_to_filter[bx].size())
+            all_records.push_back(std::make_shared<SeqLib::BamRecord>(r));
+
         for (auto ids : barcodes_to_filter[bx]) {
             records[ids].push_back(all_records.back());
         }
@@ -114,6 +116,7 @@ void runExtract(int argc, char** argv) {
                 writer.second.Close();
                 records[writer.first].clear();
             }
+            all_records.clear();
         }
     }
     for (auto& writer : writers) {
