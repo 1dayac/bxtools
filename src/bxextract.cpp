@@ -81,6 +81,12 @@ void runExtract(int argc, char** argv) {
     std::unordered_map<std::string, std::vector<std::shared_ptr<SeqLib::BamRecord> > > records;
     fillBarcodeMap(barcodes_to_filter, writers);
 
+    for (auto& writer : writers) {
+        writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam");
+        writer.second.SetHeader(reader.Header());
+        writer.second.WriteHeader();
+        writer.second.Close();
+    }
 
 
     std::vector<std::shared_ptr<SeqLib::BamRecord>> all_records;
@@ -99,17 +105,26 @@ void runExtract(int argc, char** argv) {
         for (auto ids : barcodes_to_filter[bx]) {
             records[ids].push_back(all_records.back());
         }
+        if (count % 10000000 == 0) {
+            for (auto& writer : writers) {
+                writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ba");
+                for (auto& rec : records[writer.first]) {
+                    writer.second.WriteRecord(*rec);
+                }
+                writer.second.Close();
+                records[writer.first].clear();
+            }
+        }
     }
-
     for (auto& writer : writers) {
-        writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam");
-        writer.second.SetHeader(reader.Header());
-        writer.second.WriteHeader();
+        writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ba");
         for (auto& rec : records[writer.first]) {
             writer.second.WriteRecord(*rec);
         }
         writer.second.Close();
+        records[writer.first].clear();
     }
+
 
 }
 
