@@ -105,7 +105,7 @@ void runExtract(int argc, char** argv) {
         for (auto ids : barcodes_to_filter[bx]) {
             records[ids].push_back(all_records.back());
         }
-        if (count % 10000000 == 0) {
+        if (count % 100000 == 0) {
             for (auto& writer : writers) {
                 writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ba");
                 for (auto& rec : records[writer.first]) {
