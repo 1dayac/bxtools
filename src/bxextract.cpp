@@ -2,7 +2,6 @@
 #include <getopt.h>
 #include <iostream>
 #include <fstream>
-#include <memory>
 #include "SeqLib/BamReader.h"
 #include "SeqLib/BamWriter.h"
 #include "dirent.h"
@@ -78,7 +77,7 @@ void runExtract(int argc, char** argv) {
 
     std::unordered_map<std::string, std::vector<std::string>> barcodes_to_filter;
     std::unordered_map<std::string, SeqLib::BamWriter> writers;
-    std::unordered_map<std::string, std::vector<std::shared_ptr<SeqLib::BamRecord> > > records;
+    std::unordered_map<std::string, std::vector<SeqLib::BamRecord > > records;
     fillBarcodeMap(barcodes_to_filter, writers);
 
     for (auto& writer : writers) {
@@ -102,16 +101,16 @@ void runExtract(int argc, char** argv) {
         if (!tag_present)
             continue;
         if (barcodes_to_filter[bx].size())
-            all_records.push_back(std::make_shared<SeqLib::BamRecord>(r));
+            all_records.push_back(r);
 
         for (auto ids : barcodes_to_filter[bx]) {
             records[ids].push_back(all_records.back());
         }
-        if (count % 100000 == 0) {
+        if (count % 10000000 == 0) {
             for (auto& writer : writers) {
                 writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ba");
                 for (auto& rec : records[writer.first]) {
-                    writer.second.WriteRecord(*rec);
+                    writer.second.WriteRecord(rec);
                 }
                 writer.second.Close();
                 records[writer.first].clear();
