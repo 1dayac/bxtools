@@ -88,7 +88,6 @@ void runExtract(int argc, char** argv) {
     }
 
 
-    std::vector<std::shared_ptr<SeqLib::BamRecord>> all_records;
     // loop and filter
     SeqLib::BamRecord r;
     size_t count = 0;
@@ -100,11 +99,9 @@ void runExtract(int argc, char** argv) {
         bool tag_present = r.GetZTag("BX", bx);
         if (!tag_present)
             continue;
-        if (barcodes_to_filter[bx].size())
-            all_records.push_back(r);
 
         for (auto ids : barcodes_to_filter[bx]) {
-            records[ids].push_back(all_records.back());
+            records[ids].push_back(r);
         }
         if (count % 10000000 == 0) {
             for (auto& writer : writers) {
@@ -115,13 +112,12 @@ void runExtract(int argc, char** argv) {
                 writer.second.Close();
                 records[writer.first].clear();
             }
-            all_records.clear();
         }
     }
     for (auto& writer : writers) {
         writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ba");
         for (auto& rec : records[writer.first]) {
-            writer.second.WriteRecord(*rec);
+            writer.second.WriteRecord(rec);
         }
         writer.second.Close();
         records[writer.first].clear();
