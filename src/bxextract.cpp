@@ -73,8 +73,6 @@ void runExtract(int argc, char** argv) {
         exit(EXIT_FAILURE);
     }
 
-
-
     std::unordered_map<std::string, std::vector<std::string>> barcodes_to_filter;
     std::unordered_map<std::string, SeqLib::BamWriter> writers;
     std::unordered_map<std::string, std::vector<SeqLib::BamRecord > > records;
@@ -105,7 +103,7 @@ void runExtract(int argc, char** argv) {
         }
         if (count % 10000000 == 0) {
             for (auto& writer : writers) {
-                writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ba");
+                writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ab");
                 for (auto& rec : records[writer.first]) {
                     writer.second.WriteRecord(rec);
                 }
@@ -115,7 +113,7 @@ void runExtract(int argc, char** argv) {
         }
     }
     for (auto& writer : writers) {
-        writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ba");
+        writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ab");
         for (auto& rec : records[writer.first]) {
             writer.second.WriteRecord(rec);
         }
