@@ -112,6 +112,10 @@ void runFilter(int argc, char** argv) {
         }
     }
     if (CheckConditions(bam_records)) {
+        count++;
+        if (count % 100000 == 0) {
+            std::cerr << count << " filtered" << std::endl;
+        }
         for (const auto& record : bam_records) {
             writer.WriteRecord(record);
         }
@@ -140,7 +144,8 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
     } else {
         for (const auto &record : records) {
             if (!record.MappedFlag()) {
-                std::cerr << "Filtered: bad mapping quality" << std::endl;
+                if (opt::verbose)
+                    std::cerr << "Filtered: bad mapping quality" << std::endl;
                 return true;
             }
         }
@@ -163,8 +168,8 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
                         return false;
                     }
                 }
-
-                std::cerr << "Filtered: soft clips" << std::endl;
+                if (opt::verbose)
+                    std::cerr << "Filtered: soft clips" << std::endl;
                 return true;
             }
         }
