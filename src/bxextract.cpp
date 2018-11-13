@@ -91,7 +91,7 @@ void runExtract(int argc, char** argv) {
     size_t count = 0;
     while (reader.GetNextRecord(r)) {
         count++;
-        if (count % 1000 == 0)
+        if (count % 100000 == 0)
             std::cout << count << " alignments are processed" << std::endl;
         std::string bx;
         bool tag_present = r.GetZTag("BX", bx);
