@@ -92,8 +92,8 @@ void runFilter(int argc, char** argv) {
     // loop and filter
     SeqLib::BamRecord r1;
     size_t count = 0;
-    std::cerr << "max-soft-clipping " << opt::max_soft_clipping << std::endl;
-    std::cerr << "filter bad " << opt::filter_bad << std::endl;
+    std::cerr << "Max-soft-clipping " << opt::max_soft_clipping << std::endl;
+    std::cerr << "Filter bad: " << opt::filter_bad << std::endl;
 
     std::string read_id = "";
     std::vector<SeqLib::BamRecord> bam_records;
@@ -102,6 +102,10 @@ void runFilter(int argc, char** argv) {
             bam_records.push_back(r1);
         } else {
             if (CheckConditions(bam_records)) {
+                count++;
+                if (count % 100000 == 0) {
+                    std::cerr << count << " filtered" << std::endl;
+                }
                 for (const auto& record : bam_records) {
                     writer.WriteRecord(record);
                 }
@@ -112,7 +116,6 @@ void runFilter(int argc, char** argv) {
         }
     }
     if (CheckConditions(bam_records)) {
-        count++;
         if (count % 100000 == 0) {
             std::cerr << count << " filtered" << std::endl;
         }
@@ -143,7 +146,7 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
         return true;
     } else {
         for (const auto &record : records) {
-            if (!record.MappedFlag()) {
+            if (!record.MappedFlag() && record.MeanPhred() >= 20.0) {
                 if (opt::verbose)
                     std::cerr << "Filtered: bad mapping quality" << std::endl;
                 return true;
