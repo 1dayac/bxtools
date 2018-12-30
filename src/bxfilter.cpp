@@ -147,8 +147,11 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
     } else {
         for (const auto &record : records) {
             if (!record.MappedFlag() && record.MeanPhred() >= 20.0) {
-                if (opt::verbose)
+                if (opt::verbose) {
                     std::cerr << "Filtered: bad mapping quality" << std::endl;
+                    std::cerr << "MeanPhred - " << record.MeanPhred() << std::endl;
+                    std::cerr << "Sequence - " << record.Sequence() << std::endl;
+                }
                 return true;
             }
         }
