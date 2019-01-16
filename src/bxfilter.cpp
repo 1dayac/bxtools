@@ -52,9 +52,6 @@ static bool AdditionalChecks(const SeqLib::BamRecord &record) {
         return false;
     }
 
-    if (record.MeanPhred() < 20.0) {
-        return false;
-    }
     auto quals = record.Qualities();
     int start_pos = record.AlignmentPosition();
     int end_pos = record.AlignmentEndPosition();
@@ -72,7 +69,7 @@ static bool AdditionalChecks(const SeqLib::BamRecord &record) {
         sum_back += (int)quals[i];
     }
 
-    if (sum_back / quals.length() - end_pos < 33 + 20) {
+    if (sum_back / (quals.length() - end_pos) < 33 + 20) {
         return false;
     }
 
