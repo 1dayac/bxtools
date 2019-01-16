@@ -51,6 +51,10 @@ static bool AdditionalChecks(const SeqLib::BamRecord &record) {
     if (record.AlignmentPosition() > 25 && record.Length() - record.AlignmentEndPosition() > 25) {
         return false;
     }
+
+    if (record.MeanPhred() < 20.0) {
+        return false;
+    }
     auto quals = record.Qualities();
     int start_pos = record.AlignmentPosition();
     int end_pos = record.AlignmentEndPosition();
