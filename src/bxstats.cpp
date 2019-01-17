@@ -46,17 +46,21 @@ void runStat(int argc, char** argv) {
   }
 
   std::unordered_map<std::string, BXStat> bxstats;
+  std::unordered_set<std::string> read_ids;
+  std::unordered_set<std::string> barcodes;
+
 
   // loop and collect
   SeqLib::BamRecord r;
   size_t count = 0;
   while (reader.GetNextRecord(r)) {
+    read_ids.insert(r.Qname());
     std::string bx;
     bool tag_present = r.GetZTag(opt::tag, bx);
     BXLOOPCHECK(r, bxstats.size(), opt::tag)
     if (!tag_present)
       continue;
-
+    barcodes.insert(bx);
     ++bxstats[bx].count;
     bxstats[bx].bx = bx;
     if (r.PairMappedFlag() && !r.Interchromosomal())
@@ -81,6 +85,8 @@ void runStat(int argc, char** argv) {
 
   }
 
+  std::cout << "Number of reads: " << read_ids.size() << std::endl;
+  std::cout << "Number of barcodes: " << barcodes.size() << std::endl;
   for (const auto& b : bxstats)
     std::cout << b.second << std::endl;
 
