@@ -102,6 +102,8 @@ void runExtract(int argc, char** argv) {
             records[ids].push_back(r);
         }
         if (count % 10000000 == 0) {
+            #pragma omp parallel
+            #pragma omp for
             for (auto& writer : writers) {
                 writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ab");
                 for (auto& rec : records[writer.first]) {
