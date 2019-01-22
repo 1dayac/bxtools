@@ -32,7 +32,8 @@ static const char *STAT_USAGE_MESSAGE =
 
 static void parseOptions(int argc, char** argv);
 
-void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &barcodes_to_filter, std::unordered_map<std::string, SeqLib::BamWriter> &writers) {
+void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &barcodes_to_filter, std::unordered_map<std::string, SeqLib::BamWriter> &writers,
+                    std::vector<std::string> &filenames) {
 
 
     DIR *dirp = opendir(opt::folder_with_barcode_files.c_str());
@@ -56,6 +57,7 @@ void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &b
         }
         if (barcodes.size() > 5) {
             writers[filename.substr(0,filename.length() - 4)] = SeqLib::BamWriter();
+            filenames.push_back(filename.substr(0,filename.length() - 4));
             for (auto barcode : barcodes) {
                 barcodes_to_filter[barcode].push_back(filename.substr(0,filename.length() - 4));
             }
@@ -76,7 +78,8 @@ void runExtract(int argc, char** argv) {
     std::unordered_map<std::string, std::vector<std::string>> barcodes_to_filter;
     std::unordered_map<std::string, SeqLib::BamWriter> writers;
     std::unordered_map<std::string, std::vector<SeqLib::BamRecord > > records;
-    fillBarcodeMap(barcodes_to_filter, writers);
+    std::vector<std::string> filenames;
+    fillBarcodeMap(barcodes_to_filter, writers, filenames);
 
     for (auto& writer : writers) {
         writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam");
@@ -104,13 +107,14 @@ void runExtract(int argc, char** argv) {
         if (count % 10000000 == 0) {
             #pragma omp parallel
             #pragma omp for
-            for (auto& writer : writers) {
-                writer.second.Open(opt::folder_with_small_bams + writer.first + ".bam", "ab");
-                for (auto& rec : records[writer.first]) {
-                    writer.second.WriteRecord(rec);
+            for (size_t i = 0; i < filenames.size(); ++i) {
+                auto &writer = writers[filenames[i]];
+                writer.Open(opt::folder_with_small_bams + filenames[i] + ".bam", "ab");
+                for (auto& rec : records[filenames[i]]) {
+                    writer.WriteRecord(rec);
                 }
-                writer.second.Close();
-                records[writer.first].clear();
+                writer.Close();
+                records[filenames[i]].clear();
             }
         }
     }

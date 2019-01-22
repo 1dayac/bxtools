@@ -4941,14 +4941,14 @@ if test "$enable_development"; then
 fi
 
 # Set compiler flags.
-AM_CXXFLAGS="-std=c++11 -Wall -Wextra $fail_on_warning -Wno-unknown-pragmas"
+AM_CXXFLAGS="-std=c++11 -Wall -Wextra -fopenmp $fail_on_warning -Wno-unknown-pragmas"
 
 ##AC_SUBST(AM_CXXFLAGS, "-Wall -Wextra $fail_on_warning -Wno-unknown-pragmas")
 ##AC_SUBST(CXXFLAGS, "$CXXFLAGS")
 ##AC_SUBST(CFLAGS, "$CFLAGS")
 ##AC_SUBST(CPPFLAGS, "$CPPFLAGS $boost_include")
 ## pthread required for htslib to link
-LDFLAGS="$LDFLAGS -pthread -fopenmp"
+LDFLAGS="$LDFLAGS -pthread"
 
 ##AC_SUBST(LIBS, "$LIBS")
 
