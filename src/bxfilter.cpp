@@ -60,7 +60,7 @@ static bool AdditionalChecks(const SeqLib::BamRecord &record) {
         sum_front += (int)quals[i];
     }
 
-    if (sum_front / start_pos < 33 + 20) {
+    if (sum_front / start_pos < 33 + 30) {
         return false;
     }
 
@@ -69,7 +69,7 @@ static bool AdditionalChecks(const SeqLib::BamRecord &record) {
         sum_back += (int)quals[i];
     }
 
-    if (sum_back / (quals.length() - end_pos) < 33 + 20) {
+    if (sum_back / (quals.length() - end_pos) < 33 + 30) {
         return false;
     }
 
@@ -147,9 +147,9 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
         return true;
     } else {
         for (const auto &record : records) {
-            if (!record.MappedFlag() && record.MeanPhred() >= 20.0) {
+            if (!record.MappedFlag() && record.MeanPhred() >= 30.0) {
                 if (opt::verbose) {
-                    std::cerr << "Filtered: bad mapping quality" << std::endl;
+                    std::cerr << "Filtered: unmapped read with good quality" << std::endl;
                     std::cerr << "MeanPhred - " << record.MeanPhred() << std::endl;
                     std::cerr << "Sequence - " << record.Sequence() << std::endl;
                 }
