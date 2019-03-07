@@ -56,23 +56,26 @@ static bool AdditionalChecks(const SeqLib::BamRecord &record) {
     int start_pos = record.AlignmentPosition();
     int end_pos = record.AlignmentEndPosition();
     size_t sum_front = 0;
-    for (int i = 0; i < start_pos; ++i) {
-        sum_front += (int)quals[i];
-    }
+    if (start_pos != 0) {
+        for (int i = 0; i < start_pos; ++i) {
+            sum_front += (int)quals[i];
+        }
 
-    if (sum_front / start_pos < 33 + 30) {
-        return false;
-    }
+        if (sum_front / start_pos < 33 + 30) {
+            return false;
+        }
 
+    }
     size_t sum_back = 0;
-    for (int i = record.AlignmentEndPosition(); i < quals.length(); ++i) {
-        sum_back += (int)quals[i];
-    }
+    if (end_pos != quals.length()) {
+        for (int i = end_pos; i < quals.length(); ++i) {
+            sum_back += (int)quals[i];
+        }
 
-    if (sum_back / (quals.length() - end_pos) < 33 + 30) {
-        return false;
+        if (sum_back / (quals.length() - end_pos) < 33 + 30) {
+            return false;
+        }
     }
-
 
     return true;
 }
