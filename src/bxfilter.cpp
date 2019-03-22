@@ -129,6 +129,16 @@ void runFilter(int argc, char** argv) {
     }
 }
 
+static bool DecoyOrUnmapped(const std::string &chr_name) {
+    if (chr_name.substr(0, 2) == "hs") {
+        return true;
+    }
+    if (chr_name.find("Un") != std::string::npos) {
+        return true;
+    }
+    return false;
+}
+
 static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
     if (!opt::filter_bad) {
         for (const auto &record : records) {
@@ -158,6 +168,15 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
                 }
                 return true;
             }
+            if (DecoyOrUnmapped(record.ChrName()) && record.MeanPhred() >= 30.0) {
+                if (opt::verbose) {
+                    std::cerr << "Filtered: read mapped to decoy with good quality" << std::endl;
+                    std::cerr << "MeanPhred - " << record.MeanPhred() << std::endl;
+                    std::cerr << "Sequence - " << record.Sequence() << std::endl;
+                }
+                return true;
+            }
+
         }
         for (const auto &record : records) {
             if (record.NumSoftClip()/(double)record.Length() > opt::max_soft_clipping) {
