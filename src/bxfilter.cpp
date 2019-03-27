@@ -61,7 +61,7 @@ static bool AdditionalChecks(const SeqLib::BamRecord &record) {
             sum_front += (int)quals[i];
         }
 
-        if (sum_front / start_pos < 33 + 30) {
+        if (sum_front / start_pos < 33 + 31) {
             return false;
         }
 
@@ -72,7 +72,7 @@ static bool AdditionalChecks(const SeqLib::BamRecord &record) {
             sum_back += (int)quals[i];
         }
 
-        if (sum_back / (quals.length() - end_pos) < 33 + 30) {
+        if (sum_back / (quals.length() - end_pos) < 33 + 31) {
             return false;
         }
     }
@@ -159,24 +159,30 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
         }
         return true;
     } else {
+        bool is_unmapped = false;
+        bool is_decoyed = false;
+        bool all_good_quality = true;
         for (const auto &record : records) {
-            if (!record.MappedFlag() && record.MeanPhred() >= 30.0) {
+            if (record.MeanPhred() < 31.0) {
+                all_good_quality = false;
+                break;
+            }
+            if (!record.MappedFlag()) {
+                is_unmapped = true;
+            }
+            if (DecoyOrUnmapped(record.ChrName())) {
+                is_decoyed = true;
+            }
+        }
+        if (all_good_quality) {
+            if (is_decoyed || is_unmapped) {
                 if (opt::verbose) {
-                    std::cerr << "Filtered: unmapped read with good quality" << std::endl;
+                    std::cerr << "Filtered: read mapped to decoy or unmapped with good quality" << std::endl;
                     std::cerr << "MeanPhred - " << record.MeanPhred() << std::endl;
                     std::cerr << "Sequence - " << record.Sequence() << std::endl;
                 }
                 return true;
             }
-            if (DecoyOrUnmapped(record.ChrName()) && record.MeanPhred() >= 30.0) {
-                if (opt::verbose) {
-                    std::cerr << "Filtered: read mapped to decoy with good quality" << std::endl;
-                    std::cerr << "MeanPhred - " << record.MeanPhred() << std::endl;
-                    std::cerr << "Sequence - " << record.Sequence() << std::endl;
-                }
-                return true;
-            }
-
         }
         for (const auto &record : records) {
             if (record.NumSoftClip()/(double)record.Length() > opt::max_soft_clipping) {
