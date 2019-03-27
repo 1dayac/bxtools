@@ -178,8 +178,8 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
             if (is_decoyed || is_unmapped) {
                 if (opt::verbose) {
                     std::cerr << "Filtered: read mapped to decoy or unmapped with good quality" << std::endl;
-                    std::cerr << "MeanPhred - " << record.MeanPhred() << std::endl;
-                    std::cerr << "Sequence - " << record.Sequence() << std::endl;
+                    std::cerr << "MeanPhred - " << records[0].MeanPhred() << std::endl;
+                    std::cerr << "Sequence - " << records[0].Sequence() << std::endl;
                 }
                 return true;
             }
