@@ -157,6 +157,28 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
                 return false;
             }
         }
+
+        for (const auto &record : records) {
+            if (record.MaxInsertionBases() > 3 || record.MaxDeletionBases() > 3) {
+                return false;
+            }
+        }
+
+
+        std::vector<std::string> chrom;
+        for (const auto &record : records) {
+            chrom.push_back(record.ChrName());
+        }
+        bool allAreEqual =
+                find_if(chrom.begin() + 1,
+                        chrom.end(),
+                        bind1st(std::not_equal_to<std::string>(), chrom.front())) == chrom.end();
+
+        if (!allAreEqual) {
+            return false;
+        }
+
+
         return true;
     } else {
         bool is_unmapped = false;
