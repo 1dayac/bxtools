@@ -169,13 +169,15 @@ static bool CheckConditions(const std::vector<SeqLib::BamRecord> &records) {
         for (const auto &record : records) {
             chrom.push_back(record.ChrName());
         }
-        bool allAreEqual =
-                find_if(chrom.begin() + 1,
-                        chrom.end(),
-                        bind1st(std::not_equal_to<std::string>(), chrom.front())) == chrom.end();
+        if (chrom.size()) {
+            bool allAreEqual =
+                    find_if(chrom.begin() + 1,
+                            chrom.end(),
+                            bind1st(std::not_equal_to<std::string>(), chrom.front())) == chrom.end();
 
-        if (!allAreEqual) {
-            return false;
+            if (!allAreEqual) {
+                return false;
+            }
         }
 
 
