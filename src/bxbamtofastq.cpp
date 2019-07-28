@@ -49,6 +49,9 @@ void processReadPair(std::vector<SeqLib::BamRecord> &records, std::ofstream &fir
     bool tag_present = records[0].GetZTag("BX", bx);
 
     for (auto record : records) {
+        if (record.SecondaryFlag()) {
+            continue;
+        }
         auto cigar = record.GetCigar();
         int start_offset = 0;
         int end_offset = 0;
