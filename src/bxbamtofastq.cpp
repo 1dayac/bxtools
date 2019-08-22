@@ -17,6 +17,46 @@ namespace opt {
     static std::string output_folder;
 }
 
+/**
+ * ACGT -> TGCA
+ * @param char c is 'A/a/0', 'C/c/1', 'G/g/2', 'T/t/3' or 'N'
+ * @return complement symbol, i.e. 'A/a/0' => 'T/t/3', 'C/c/1' => 'G/g/2', 'G/g/2' => 'C/c/1', 'T/t/3' => 'A/a/0', 'N' => 'N'
+ */
+inline char nucl_complement(char c) {
+    switch (c) {
+        case 0:
+            return 3;
+        case 'a':
+            return 't';
+        case 'A':
+            return 'T';
+        case 1:
+            return 2;
+        case 'c':
+            return 'g';
+        case 'C':
+            return 'G';
+        case 2:
+            return 1;
+        case 'g':
+            return 'c';
+        case 'G':
+            return 'C';
+        case 3:
+            return 0;
+        case 't':
+            return 'a';
+        case 'T':
+            return 'A';
+        case 'N':
+            return 'N';
+        case 'n':
+            return 'n';
+        default:
+            return 'n';
+    }
+}
+
 static const char* shortopts = "hv:";
 static const struct option longopts[] = {
         { "help",                    no_argument, NULL, 'h' },
@@ -33,6 +73,11 @@ static const char *STAT_USAGE_MESSAGE =
 
 static void parseOptions(int argc, char** argv);
 
+inline const std::string ReverseComplement(const std::string &s) {
+    std::string res(s.size(), 0);
+    transform(s.begin(), s.end(), res.rbegin(), nucl_complement); // only difference with reverse is rbegin() instead of begin()
+    return res;
+}
 
 
 void processReadPair(std::vector<SeqLib::BamRecord> &records, std::ofstream &first, std::ofstream &second) {
@@ -74,16 +119,28 @@ void processReadPair(std::vector<SeqLib::BamRecord> &records, std::ofstream &fir
                 first_read.resize(total_length, '?');
                 first_qual.resize(total_length, '?');
             }
+            std::string sequence = record.ReverseFlag() ? ReverseComplement(record.Sequence()) : record.Sequence();
+            std::string qualities = record.QualitySequence();
 
-            first_read.replace(start_offset, total_length - start_offset - end_offset, record.Sequence());
-            first_qual.replace(start_offset, total_length - start_offset - end_offset, record.Qualities());
+            if (record.ReverseFlag()) {
+                std::reverse(qualities.begin(), qualities.end());
+            }
+            first_read.replace(start_offset, total_length - start_offset - end_offset, sequence);
+            first_qual.replace(start_offset, total_length - start_offset - end_offset, qualities);
         } else {
             if (second_read.size() < total_length) {
                 second_read.resize(total_length, '?');
                 second_qual.resize(total_length, '?');
             }
-            second_read.replace(start_offset, total_length - start_offset - end_offset, record.Sequence());
-            second_qual.replace(start_offset, total_length - start_offset - end_offset, record.Qualities());
+            std::string sequence = record.ReverseFlag() ? ReverseComplement(record.Sequence()) : record.Sequence();
+            std::string qualities = record.QualitySequence();
+
+            if (record.ReverseFlag()) {
+                std::reverse(qualities.begin(), qualities.end());
+            }
+
+            second_read.replace(start_offset, total_length - start_offset - end_offset, sequence);
+            second_qual.replace(start_offset, total_length - start_offset - end_offset, qualities);
         }
     }
 
