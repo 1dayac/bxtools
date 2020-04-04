@@ -44,7 +44,9 @@ void runFindSV(int argc, char** argv) {
                     continue;
                 }
                 if (c_data.Type() == 'D') {
-                    sv_map[start][c_data.Length()]++;
+                    if (c_data.Length() > 5) {
+                        sv_map[start][c_data.Length()]++;
+                    }
                     start += c_data.Length();
                     continue;
                 }
