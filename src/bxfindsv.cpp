@@ -65,7 +65,7 @@ void runFindSV(int argc, char** argv) {
 
 
 static void parseOptions(int argc, char** argv) {
-    for (int i = 0; i < argc; ++i) {
+    for (int i = 1; i < argc; ++i) {
         opt::bams.push_back(argv[i]);
     }
 }
