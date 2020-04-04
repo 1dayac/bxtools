@@ -37,7 +37,7 @@ void runFindSV(int argc, char** argv) {
             if (!r.MappedFlag() || r.NumSoftClip() > 0 || r.NumHardClip() > 0) {
                 continue;
             }
-            int start = r.AlignmentPosition();
+            int start = r.Position();
             for (auto c_data : r.GetCigar()) {
                 if (c_data.Type() == 'M') {
                     start += c_data.Length();
