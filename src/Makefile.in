@@ -99,7 +99,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_bxtools_OBJECTS = bxtools-bxtools.$(OBJEXT) \
+am_bxtools_OBJECTS = bxtools-bxtools.$(OBJEXT) bxtools-bxfindsv.$(OBJEXT)\
 	bxtools-bxsplit.$(OBJEXT) bxtools-bxsplit2.$(OBJEXT) bxtools-bxstats.$(OBJEXT) \
 	bxtools-bxtile.$(OBJEXT) bxtools-bxbamtofastq.$(OBJEXT) bxtools-bxrelabel.$(OBJEXT) \
 	bxtools-bxconvert.$(OBJEXT) bxtools-bxsubsample.$(OBJEXT) bxtools-bxmol.$(OBJEXT) \
@@ -271,7 +271,7 @@ bxtools_LDADD = \
 	$(top_builddir)/SeqLib/src/libseqlib.a \
 	$(top_builddir)/SeqLib/htslib/libhts.a 
 
-bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxsplit2.cpp bxbamtofastq.cpp bxsubsample.cpp bxstats.cpp bxextract.cpp bxfilter.cpp bxtile.cpp bxrelabel.cpp bxconvert.cpp bxmol.cpp bxgroup.cpp
+bxtools_SOURCES = bxtools.cpp bxsplit.cpp bxsplit2.cpp bxbamtofastq.cpp bxfindsv.cpp bxsubsample.cpp bxstats.cpp bxextract.cpp bxfilter.cpp bxtile.cpp bxrelabel.cpp bxconvert.cpp bxmol.cpp bxgroup.cpp
 all: all-am
 
 .SUFFIXES:
@@ -365,6 +365,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxsplit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxsplit2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxbamtofastq.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxfindsv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxsubsample.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxstats.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/bxtools-bxextract.Po@am__quote@
@@ -414,6 +415,20 @@ bxtools-bxsplit.obj: bxsplit.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxsplit.obj `if test -f 'bxsplit.cpp'; then $(CYGPATH_W) 'bxsplit.cpp'; else $(CYGPATH_W) '$(srcdir)/bxsplit.cpp'; fi`
 
+bxtools-bxfindsv.o: bxfindsv.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxfindsv.o -MD -MP -MF $(DEPDIR)/bxtools-bxfindsv.Tpo -c -o bxtools-bxfindsv.o `test -f 'bxfindsv.cpp' || echo '$(srcdir)/'`bxfindsv.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bxtools-bxfindsv.Tpo $(DEPDIR)/bxtools-bxfindsv.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bxfindsv.cpp' object='bxtools-bxfindsv.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxfindsv.o `test -f 'bxfindsv.cpp' || echo '$(srcdir)/'`bxfindsv.cpp
+
+bxtools-bxfindsv.obj: bxfindsv.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxfindsv.obj -MD -MP -MF $(DEPDIR)/bxtools-bxfindsv.Tpo -c -o bxtools-bxfindsv.obj `if test -f 'bxfindsv.cpp'; then $(CYGPATH_W) 'bxfindsv.cpp'; else $(CYGPATH_W) '$(srcdir)/bxfindsv.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bxtools-bxfindsv.Tpo $(DEPDIR)/bxtools-bxfindsv.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bxfindsv.cpp' object='bxtools-findsv.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxfindsv.obj `if test -f 'bxfindsv.cpp'; then $(CYGPATH_W) 'bxfindsv.cpp'; else $(CYGPATH_W) '$(srcdir)/bxfindsv.cpp'; fi`
+
 bxtools-bxbamtofastq.o: bxbamtofastq.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxbamtofastq.o -MD -MP -MF $(DEPDIR)/bxtools-bxbamtofastq.Tpo -c -o bxtools-bxbamtofastq.o `test -f 'bxbamtofastq.cpp' || echo '$(srcdir)/'`bxbamtofastq.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/bxtools-bxbamtofastq.Tpo $(DEPDIR)/bxtools-bxbamtofastq.Po
@@ -427,6 +442,7 @@ bxtools-bxbamtofastq.obj: bxbamtofastq.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bxbamtofastq.cpp' object='bxtools-bamtofastq.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o bxtools-bxbamtofastq.obj `if test -f 'bxbamtofastq.cpp'; then $(CYGPATH_W) 'bxbamtofastq.cpp'; else $(CYGPATH_W) '$(srcdir)/bxbamtofastq.cpp'; fi`
+
 
 bxtools-bxsplit2.o: bxsplit2.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(bxtools_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT bxtools-bxsplit2.o -MD -MP -MF $(DEPDIR)/bxtools-bxsplit2.Tpo -c -o bxtools-bxsplit2.o `test -f 'bxsplit2.cpp' || echo '$(srcdir)/'`bxsplit2.cpp

@@ -17,6 +17,7 @@
 #include <bxfilter.h>
 #include <bxsubsample.h>
 #include <bxbamtofastq.h>
+#include <bxfindsv.hpp>
 
 static const char *USAGE_MESSAGE =
 "Program: bxtools \n"
@@ -72,6 +73,8 @@ int main(int argc, char** argv) {
       runSubsample(argc - 1, argv + 1);
     } else if (command == "bamtofastq") {
       runBamToFastq(argc - 1, argv + 1);
+    } else if (command == "findsv") {
+      runFindSV(argc - 1, argv + 1);
     }
     else {
       std::cerr << USAGE_MESSAGE;
