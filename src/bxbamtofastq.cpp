@@ -120,7 +120,7 @@ void processReadPair(std::vector<SeqLib::BamRecord> &records, std::ofstream &fir
                 first_qual.resize(total_length, '?');
             }
             std::string sequence = record.ReverseFlag() ? ReverseComplement(record.Sequence()) : record.Sequence();
-            std::string qualities = record.QualitySequence();
+            std::string qualities = record.Qualities();
 
             if (record.ReverseFlag()) {
                 std::reverse(qualities.begin(), qualities.end());
@@ -133,7 +133,7 @@ void processReadPair(std::vector<SeqLib::BamRecord> &records, std::ofstream &fir
                 second_qual.resize(total_length, '?');
             }
             std::string sequence = record.ReverseFlag() ? ReverseComplement(record.Sequence()) : record.Sequence();
-            std::string qualities = record.QualitySequence();
+            std::string qualities = record.Qualities();
 
             if (record.ReverseFlag()) {
                 std::reverse(qualities.begin(), qualities.end());
