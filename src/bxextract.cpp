@@ -52,7 +52,7 @@ void fillBarcodeMap(std::unordered_map<std::string, std::vector<std::string>> &b
         while (in >> barcode) {
             barcodes.push_back(barcode);
             count++;
-            if (count == 100)
+            if (count == 300)
                 break;
         }
         if (barcodes.size() > 5) {
