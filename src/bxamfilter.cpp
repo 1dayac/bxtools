@@ -55,7 +55,7 @@ void runAmFilter(int argc, char** argv) {
     SeqLib::BamRecord r1;
 
     std::unordered_set<std::string> records_to_discard;
-    std::string tag;
+    int tag;
     std::string barcode;
 
     int distance_diff = 15000;
@@ -65,7 +65,10 @@ void runAmFilter(int argc, char** argv) {
         int pos = r1.Position();
         r1.GetTag("AM", tag);
         r1.GetTag("BX", barcode);
-        if (tag == "0") {
+        std::cerr << tag << std::endl;
+        std::cerr << barcode << std::endl;
+
+        if (tag == 0) {
             records_to_discard.insert(read_id);
         } else {
             if (current_reads[barcode].size() == 0) {
