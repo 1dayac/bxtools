@@ -96,12 +96,14 @@ void runAmFilter(int argc, char** argv) {
     }
 
     reader.Close();
-    if (!reader.Open(opt::bam)) {
+    SeqLib::BamReader reader2;
+
+    if (!reader2.Open(opt::bam)) {
         std::cerr << "Failed to open bam: " << opt::bam << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    while (reader.GetNextRecord(r1)) {
+    while (reader2.GetNextRecord(r1)) {
         if (!records_to_discard.count(r1.Qname())) {
             writer.WriteRecord(r1);
         }
