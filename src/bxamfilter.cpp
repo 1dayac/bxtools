@@ -63,7 +63,7 @@ void runAmFilter(int argc, char** argv) {
     while (reader.GetNextRecord(r1)) {
         std::string read_id = r1.Qname();
         int pos = r1.Position();
-        r1.GetTag("AM", tag);
+        r1.GetZTag("AM", tag);
         r1.GetTag("BX", barcode);
         std::cerr << tag << std::endl;
         std::cerr << barcode << std::endl;
