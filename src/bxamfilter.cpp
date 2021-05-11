@@ -58,7 +58,7 @@ void runAmFilter(int argc, char** argv) {
     int tag;
     std::string barcode;
 
-    int distance_diff = 15000;
+    int distance_diff = 5000;
     std::unordered_map<std::string, std::stack<std::pair<std::string, int>>> current_reads;
     while (reader.GetNextRecord(r1)) {
         std::string read_id = r1.Qname();
@@ -68,7 +68,7 @@ void runAmFilter(int argc, char** argv) {
         std::cerr << tag << std::endl;
         std::cerr << barcode << std::endl;
 
-        if (tag == 0) {
+        if (tag == '0') {
             records_to_discard.insert(read_id);
         } else {
             if (current_reads[barcode].size() == 0) {
