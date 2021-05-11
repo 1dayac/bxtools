@@ -87,7 +87,12 @@ void runAmFilter(int argc, char** argv) {
                 }
             }
         }
+    }
 
+    for (auto it : current_reads) {
+        if (it.second.size() == 1) {
+            records_to_discard.insert(it.first);
+        }
     }
 
     reader.Close();
