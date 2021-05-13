@@ -12,6 +12,7 @@
 #include <getopt.h>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 #include "SeqLib/BamReader.h"
 #include "SeqLib/BamWriter.h"
 
@@ -60,13 +61,17 @@ void runAmFilter(int argc, char** argv) {
 
     int distance_diff = 5000;
     std::unordered_map<std::string, std::stack<std::pair<std::string, int>>> current_reads;
+    std::unordered_map<std::string, int> barcode_count;
+
     while (reader.GetNextRecord(r1)) {
         std::string read_id = r1.Qname();
         int pos = r1.Position();
         r1.GetATag("AM", tag);
         r1.GetTag("BX", barcode);
-        std::cerr << tag << std::endl;
-        std::cerr << barcode << std::endl;
+        //std::cerr << tag << std::endl;
+        //std::cerr << barcode << std::endl;
+
+        barcode_count[barcode]++;
 
         if (tag == '0') {
             records_to_discard.insert(read_id);
@@ -91,6 +96,17 @@ void runAmFilter(int argc, char** argv) {
             }
         }
     }
+    std::vector<int> v;
+    for (auto it : barcode_count) {
+        std::cerr << it.first << " " << it.second << std::endl;
+        v.push_back(it.second);
+    }
+
+    std::sort(v.begin(), v.end());
+    int threshold = 1000;
+    if (!v.empty()) {
+        threshold = 3 * v[v.size() / 2];
+    }
 
     for (auto it : current_reads) {
         if (it.second.size() == 1) {
@@ -107,7 +123,9 @@ void runAmFilter(int argc, char** argv) {
     }
 
     while (reader2.GetNextRecord(r1)) {
-        if (!records_to_discard.count(r1.Qname())) {
+        r1.GetTag("BX", barcode);
+
+        if (!records_to_discard.count(r1.Qname()) && barcode_count[barcode] < threshold) {
             writer.WriteRecord(r1);
         }
     }
