@@ -105,7 +105,7 @@ void runAmFilter(int argc, char** argv) {
     std::sort(v.begin(), v.end());
     int threshold = 1000;
     if (!v.empty()) {
-        threshold = 3 * v[v.size() / 2];
+        threshold = 4 * v[v.size() / 2];
     }
 
     for (auto it : current_reads) {
